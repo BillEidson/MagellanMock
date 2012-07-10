@@ -7,7 +7,10 @@ using System.Windows.Forms;
 
 namespace MagellanMock
 {
-   public partial class Form1 : Form
+   /// <summary>
+   /// Form1 class
+   /// </summary>
+    public partial class Form1 : Form
    {
       System.Threading.Timer timer = null;
 
