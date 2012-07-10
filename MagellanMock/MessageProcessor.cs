@@ -57,30 +57,6 @@ namespace MagellanMock
          return result;
       }
 
-      public class MessageBuildArguments
-      {
-         public bool IsAuthorization { get; set; }
-         public string FileName { get; set; }
-
-         public string MAT { get; set; }
-         public bool SetMATNumber { get; set; }
-
-         public List<string> Errors { get; set; }
-         public bool SetErrors { get; set; }
-
-         public bool Accepted { get; set; }
-         public Dictionary<string, string> FieldMap { get; set; }
-      }
-
-      public class ParsedResult
-      {
-         public Dictionary<string, string> FieldMap { get; set; }
-         public string Line { get; set; }
-         public string Key { get; set; }
-         public string FileName { get; set; }
-         public string Response { get; set; }
-      }
-
       Dictionary<string, string> GetFieldMap(string definitionDocXml, string line)
       {
          var doc = XDocument.Parse(definitionDocXml);
@@ -166,24 +142,4 @@ namespace MagellanMock
       }
    }
    
-    public static class StringExtension
-   {
-       public static string NTrace(this string s, params object[] args)
-       {
-           string msg = string.Format(s, args);
-           System.Diagnostics.Trace.WriteLine(msg);
-           return msg;
-       }
-
-       public static string XTrace(this string s, Exception ex)
-       {
-           return ex.ToString().NTrace(ex);
-       }
-
-       public static string XTrace(this string s, Exception ex, params object[] args)
-       {
-           ex.ToString().NTrace(ex);
-           return s.NTrace(args);
-       }
-   }
 }
