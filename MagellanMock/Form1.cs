@@ -10,7 +10,7 @@ namespace MagellanMock
    /// <summary>
    /// Form1 class
    /// </summary>
-    public partial class Form1 : Form
+   public partial class Form1 : Form
    {
       System.Threading.Timer timer = null;
 
@@ -56,10 +56,10 @@ namespace MagellanMock
                   .ToArray();
 
             var fileName = Path.Combine(tbPickupFolder.Text, Path.GetFileName(file) + "R");
-            
+
             if (File.Exists(fileName))
                File.Delete(fileName);
-            
+
             File.WriteAllText(fileName, sb.ToString());
          });
 
@@ -125,6 +125,10 @@ namespace MagellanMock
          OpenFileDialog ofd = new OpenFileDialog();
          ofd.Title = "Open a Magellan File";
          ofd.InitialDirectory = tbPickupFolder.Text;
+
+         var tis = new Tuple<int, string>(2, "2"); 
+
+
          switch (ofd.ShowDialog())
          {
             case DialogResult.OK:
