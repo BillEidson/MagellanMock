@@ -15,7 +15,7 @@ namespace MagellanMock
       System.Threading.Timer timer = null;
 
       const int pollingDelay = 2000;
-      const int checkForFileReleased = 500;
+      const int checkForFileReleased = 5000;
 
       public Form1()
       {
