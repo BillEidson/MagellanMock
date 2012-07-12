@@ -69,8 +69,8 @@ namespace MagellanMock
                 var sp = (int)targetField.Attribute("StartingPosition") - 1;
                 var ep = (int)targetField.Attribute("EndPosition");
 
-                if (ep > line.Length - 1)
-                    ep = line.Length - 1;
+                if (ep > line.Length)
+                    ep = line.Length;
 
                 string di = "";
                 if (ep - sp >= 0)
