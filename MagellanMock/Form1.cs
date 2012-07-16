@@ -12,10 +12,9 @@ namespace MagellanMock
    /// </summary>
    public partial class Form1 : Form
    {
-      System.Threading.Timer timer = null;
-
-      const int pollingDelay = 2000;
-      const int checkForFileReleased = 5000;
+      private const int checkForFileReleased = 5000;
+      private const int pollingDelay = 2000;
+      private System.Threading.Timer timer = null;
 
       public Form1()
       {
@@ -24,17 +23,33 @@ namespace MagellanMock
       }
 
       #region Timer Event Handler
-      void TimerCB(object state)
+
+      private void TimerCB(object state)
       {
          foreach (var file in Directory.GetFiles(tbDropFolder.Text, "*.*"))
             ProcessInputFile(file);
 
          timer.Change(pollingDelay, Timeout.Infinite);
       }
-      #endregion
+
+      #endregion Timer Event Handler
 
       #region Private Implementation
-      void ProcessInputFile(string file)
+
+      private void DoFolderLookupDialog(TextBox tb)
+      {
+         if (!string.IsNullOrEmpty(tb.Text) && Directory.Exists(tb.Text))
+            folderBrowser.SelectedPath = tb.Text;
+
+         switch (folderBrowser.ShowDialog())
+         {
+            case DialogResult.OK:
+               tb.Text = folderBrowser.SelectedPath;
+               break;
+         }
+      }
+
+      private void ProcessInputFile(string file)
       {
          this.Invoke(() =>
          {
@@ -70,7 +85,7 @@ namespace MagellanMock
          File.Move(file, procFileName);
       }
 
-      bool TryFileOpenExclusive(string file)
+      private bool TryFileOpenExclusive(string file)
       {
          try
          {
@@ -82,25 +97,35 @@ namespace MagellanMock
          return false;
       }
 
-      void DoFolderLookupDialog(TextBox tb)
-      {
-         if (!string.IsNullOrEmpty(tb.Text) && Directory.Exists(tb.Text))
-            folderBrowser.SelectedPath = tb.Text;
-
-         switch (folderBrowser.ShowDialog())
-         {
-            case DialogResult.OK:
-               tb.Text = folderBrowser.SelectedPath;
-               break;
-         }
-      }
-
-      #endregion
+      #endregion Private Implementation
 
       #region UI Event Handlers
+
       private void btnDropFolder_Click(object sender, EventArgs e)
       {
          DoFolderLookupDialog(tbDropFolder);
+      }
+
+      private void btnParse_Click(object sender, EventArgs e)
+      {
+         OpenFileDialog ofd = new OpenFileDialog();
+         ofd.Title = "Open a Magellan File";
+         ofd.InitialDirectory = tbPickupFolder.Text;
+
+         var tis = new Tuple<int, string>(2, "2");
+
+         switch (ofd.ShowDialog())
+         {
+            case DialogResult.OK:
+               {
+                  var result = new MessageProcessor().Execute(ofd.FileName, false);
+                  MessageForm popupForm = new MessageForm { FileName = result[0].FileName };
+                  foreach (var i in result)
+                     popupForm.AddTab(i.Key, i.FieldMap);
+                  popupForm.Show();
+                  break;
+               }
+         }
       }
 
       private void btnPickupFolder_Click(object sender, EventArgs e)
@@ -120,29 +145,6 @@ namespace MagellanMock
          timer.Change(pollingDelay, Timeout.Infinite);
       }
 
-      private void btnParse_Click(object sender, EventArgs e)
-      {
-         OpenFileDialog ofd = new OpenFileDialog();
-         ofd.Title = "Open a Magellan File";
-         ofd.InitialDirectory = tbPickupFolder.Text;
-
-         var tis = new Tuple<int, string>(2, "2"); 
-
-
-         switch (ofd.ShowDialog())
-         {
-            case DialogResult.OK:
-               {
-                  var result = new MessageProcessor().Execute(ofd.FileName, false);
-                  MessageForm popupForm = new MessageForm { FileName = result[0].FileName };
-                  foreach (var i in result)
-                     popupForm.AddTab(i.Key, i.FieldMap);
-                  popupForm.Show();
-                  break;
-               }
-         }
-      }
-      #endregion
+      #endregion UI Event Handlers
    }
-
 }

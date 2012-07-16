@@ -14,6 +14,17 @@ namespace MagellanMock
 
       public Dictionary<string, string> FieldMap { get; set; }
 
+      private void btnAddError_Click(object sender, EventArgs e)
+      {
+         btnAddError.Enabled = false;
+         lbErrors.Items.Add(tbNewError.Text);
+         tbNewError.Text = string.Empty;
+      }
+
+      private void btnSetResponse_Click(object sender, EventArgs e)
+      {
+      }
+
       private void ResultsPane_Load(object sender, EventArgs e)
       {
          btnAddError.Enabled = false;
@@ -27,23 +38,12 @@ namespace MagellanMock
          recordPanel.Controls.Add(dg);
       }
 
-      private void btnAddError_Click(object sender, EventArgs e)
-      {
-         btnAddError.Enabled = false;
-         lbErrors.Items.Add(tbNewError.Text);
-         tbNewError.Text = string.Empty;
-      }
-
       private void tbNewError_TextChanged(object sender, EventArgs e)
       {
          if (tbNewError.Text.Length > 0)
             btnAddError.Enabled = true;
          else
             btnAddError.Enabled = false;
-      }
-
-      private void btnSetResponse_Click(object sender, EventArgs e)
-      {
       }
    }
 }
